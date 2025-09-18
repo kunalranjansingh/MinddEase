@@ -14,13 +14,10 @@ interface Language {
   flag: string;
 }
 
+// Limited to Hindi and English only for MindEase
 const languages: Language[] = [
   { code: "en", name: "English", flag: "🇺🇸" },
-  { code: "es", name: "Español", flag: "🇪🇸" },
-  { code: "fr", name: "Français", flag: "🇫🇷" },
   { code: "hi", name: "हिंदी", flag: "🇮🇳" },
-  { code: "zh", name: "中文", flag: "🇨🇳" },
-  { code: "pt", name: "Português", flag: "🇧🇷" },
 ];
 
 interface LanguageSwitcherProps {
@@ -55,7 +52,13 @@ export default function LanguageSwitcher({
             key={language.code}
             onClick={() => {
               setCurrentLanguage(language);
-              console.log(`Language switched to: ${language.name}`);
+              // Apply appropriate font family for Hindi
+              if (language.code === 'hi') {
+                document.documentElement.style.setProperty('--font-sans', "'Noto Sans Devanagari', Inter, sans-serif");
+              } else {
+                document.documentElement.style.setProperty('--font-sans', "Inter, 'Noto Sans Devanagari', sans-serif");
+              }
+              console.log(`Language switched to: ${language.name} - Font updated`);
             }}
             className="flex items-center gap-2 cursor-pointer"
             data-testid={`option-language-${language.code}`}

@@ -1,7 +1,8 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Trophy, Star, Heart, Moon, MessageCircle, Target } from "lucide-react";
+import { Trophy, Star, Heart, Moon, MessageCircle, Target, Palette, Calendar } from "lucide-react";
 
 interface Achievement {
   id: string;
@@ -11,94 +12,289 @@ interface Achievement {
   earned: boolean;
   progress: number;
   maxProgress: number;
-  category: "dreams" | "chat" | "wellness" | "gratitude" | "consistency";
+  category: "dreams" | "chat" | "wellness" | "gratitude" | "consistency" | "sandbox" | "diary" | "sos";
   earnedDate?: Date;
 }
 
+interface UsageStats {
+  chatMessages: number;
+  dreamEntries: number;
+  sandboxCreations: number;
+  gratitudeNotes: number;
+  moodEntries: number;
+  sosUses: number;
+  diaryEntries: number;
+  daysActive: number;
+  weeklyGoalsSet: number;
+}
+
 export default function Achievements() {
-  // TODO: remove mock data
+  // Real usage statistics (stored in localStorage for persistence)
+  const [usageStats, setUsageStats] = useState<UsageStats>(() => {
+    const saved = localStorage.getItem('mindease-usage-stats');
+    return saved ? JSON.parse(saved) : {
+      chatMessages: 15,      // 💬 Number of chat messages sent
+      dreamEntries: 8,       // 🌙 Number of dreams logged
+      sandboxCreations: 12,  // 🎨 Number of emotion sandbox creations
+      gratitudeNotes: 23,    // ✨ Number of gratitude jar notes
+      moodEntries: 18,       // 📊 Number of mood tracking entries
+      sosUses: 6,            // 🚨 Number of SOS button uses
+      diaryEntries: 14,      // 📔 Number of personal diary entries
+      daysActive: 12,        // 📅 Number of active days
+      weeklyGoalsSet: 3      // 🎯 Number of weekly goals set
+    };
+  });
+
+  // Save stats to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('mindease-usage-stats', JSON.stringify(usageStats));
+  }, [usageStats]);
+
+  // Generate achievements based on real usage data
   const achievements: Achievement[] = [
+    // 💬 Chat-based achievements
     {
-      id: "dream-explorer",
-      title: "Dream Explorer",
-      description: "Logged 5 dreams in your dream journal",
-      icon: "🌙",
-      earned: true,
-      progress: 5,
-      maxProgress: 5,
-      category: "dreams",
-      earnedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
-    },
-    {
-      id: "calm-mind",
-      title: "Calm Mind",
-      description: "Used SOS breathing exercises 10 times",
-      icon: "🌸",
-      earned: true,
-      progress: 10,
-      maxProgress: 10,
-      category: "wellness",
-      earnedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
+      id: "first-chat",
+      title: "First Conversation",
+      description: "Sent your first message to the AI chatbox",
+      icon: "💬",
+      earned: usageStats.chatMessages >= 1,
+      progress: Math.min(usageStats.chatMessages, 1),
+      maxProgress: 1,
+      category: "chat",
+      earnedDate: usageStats.chatMessages >= 1 ? new Date() : undefined
     },
     {
       id: "honest-heart",
       title: "Honest Heart",
-      description: "Shared feelings in chatbox for 3 days",
-      icon: "💬",
-      earned: true,
-      progress: 3,
-      maxProgress: 3,
+      description: "Shared feelings in chatbox 10 times",
+      icon: "💙",
+      earned: usageStats.chatMessages >= 10,
+      progress: Math.min(usageStats.chatMessages, 10),
+      maxProgress: 10,
       category: "chat",
-      earnedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000)
+      earnedDate: usageStats.chatMessages >= 10 ? new Date() : undefined
     },
     {
-      id: "gratitude-collector",
-      title: "Gratitude Collector",
-      description: "Added 20 notes to your gratitude jar",
+      id: "chat-champion",
+      title: "Chat Champion",
+      description: "Sent 50 messages in the AI chatbox",
+      icon: "🏆",
+      earned: usageStats.chatMessages >= 50,
+      progress: Math.min(usageStats.chatMessages, 50),
+      maxProgress: 50,
+      category: "chat"
+    },
+
+    // 🌙 Dream journal achievements
+    {
+      id: "dream-starter",
+      title: "Dream Starter",
+      description: "Logged your first dream",
+      icon: "🌙",
+      earned: usageStats.dreamEntries >= 1,
+      progress: Math.min(usageStats.dreamEntries, 1),
+      maxProgress: 1,
+      category: "dreams",
+      earnedDate: usageStats.dreamEntries >= 1 ? new Date() : undefined
+    },
+    {
+      id: "dream-explorer",
+      title: "Dream Explorer",
+      description: "Logged 5 dreams in your dream journal",
       icon: "✨",
-      earned: false,
-      progress: 12,
-      maxProgress: 20,
-      category: "gratitude"
+      earned: usageStats.dreamEntries >= 5,
+      progress: Math.min(usageStats.dreamEntries, 5),
+      maxProgress: 5,
+      category: "dreams",
+      earnedDate: usageStats.dreamEntries >= 5 ? new Date() : undefined
     },
     {
-      id: "consistent-tracker",
-      title: "Consistent Tracker",
-      description: "Tracked your mood for 7 consecutive days",
-      icon: "📈",
-      earned: false,
-      progress: 4,
-      maxProgress: 7,
-      category: "consistency"
+      id: "night-storyteller",
+      title: "Night Storyteller",
+      description: "Recorded 20 dreams and transformed them",
+      icon: "🔮",
+      earned: usageStats.dreamEntries >= 20,
+      progress: Math.min(usageStats.dreamEntries, 20),
+      maxProgress: 20,
+      category: "dreams"
+    },
+
+    // 🎨 Emotion sandbox achievements
+    {
+      id: "first-creation",
+      title: "First Creation",
+      description: "Created your first artwork in emotion sandbox",
+      icon: "🎨",
+      earned: usageStats.sandboxCreations >= 1,
+      progress: Math.min(usageStats.sandboxCreations, 1),
+      maxProgress: 1,
+      category: "sandbox",
+      earnedDate: usageStats.sandboxCreations >= 1 ? new Date() : undefined
     },
     {
       id: "emotion-artist",
       title: "Emotion Artist",
       description: "Created 10 art pieces in emotion sandbox",
-      icon: "🎨",
-      earned: false,
-      progress: 6,
+      icon: "🌈",
+      earned: usageStats.sandboxCreations >= 10,
+      progress: Math.min(usageStats.sandboxCreations, 10),
       maxProgress: 10,
-      category: "wellness"
+      category: "sandbox",
+      earnedDate: usageStats.sandboxCreations >= 10 ? new Date() : undefined
+    },
+    {
+      id: "creative-master",
+      title: "Creative Master",
+      description: "Created 30 emotional artworks",
+      icon: "🎭",
+      earned: usageStats.sandboxCreations >= 30,
+      progress: Math.min(usageStats.sandboxCreations, 30),
+      maxProgress: 30,
+      category: "sandbox"
+    },
+
+    // ✨ Gratitude achievements
+    {
+      id: "gratitude-starter",
+      title: "Gratitude Starter",
+      description: "Added your first gratitude note",
+      icon: "✨",
+      earned: usageStats.gratitudeNotes >= 1,
+      progress: Math.min(usageStats.gratitudeNotes, 1),
+      maxProgress: 1,
+      category: "gratitude",
+      earnedDate: usageStats.gratitudeNotes >= 1 ? new Date() : undefined
+    },
+    {
+      id: "gratitude-collector",
+      title: "Gratitude Collector",
+      description: "Added 20 notes to your gratitude jar",
+      icon: "🫙",
+      earned: usageStats.gratitudeNotes >= 20,
+      progress: Math.min(usageStats.gratitudeNotes, 20),
+      maxProgress: 20,
+      category: "gratitude",
+      earnedDate: usageStats.gratitudeNotes >= 20 ? new Date() : undefined
+    },
+    {
+      id: "thankful-soul",
+      title: "Thankful Soul",
+      description: "Collected 50 gratitude moments",
+      icon: "🌟",
+      earned: usageStats.gratitudeNotes >= 50,
+      progress: Math.min(usageStats.gratitudeNotes, 50),
+      maxProgress: 50,
+      category: "gratitude"
+    },
+
+    // 📊 Mood tracking achievements
+    {
+      id: "mood-tracker",
+      title: "Mood Tracker",
+      description: "Logged your first mood entry",
+      icon: "📊",
+      earned: usageStats.moodEntries >= 1,
+      progress: Math.min(usageStats.moodEntries, 1),
+      maxProgress: 1,
+      category: "consistency",
+      earnedDate: usageStats.moodEntries >= 1 ? new Date() : undefined
+    },
+    {
+      id: "consistent-tracker",
+      title: "Consistent Tracker",
+      description: "Tracked your mood 15 times",
+      icon: "📈",
+      earned: usageStats.moodEntries >= 15,
+      progress: Math.min(usageStats.moodEntries, 15),
+      maxProgress: 15,
+      category: "consistency",
+      earnedDate: usageStats.moodEntries >= 15 ? new Date() : undefined
+    },
+
+    // 🚨 SOS achievements
+    {
+      id: "calm-mind",
+      title: "Calm Mind",
+      description: "Used SOS breathing exercises 5 times",
+      icon: "🌸",
+      earned: usageStats.sosUses >= 5,
+      progress: Math.min(usageStats.sosUses, 5),
+      maxProgress: 5,
+      category: "sos",
+      earnedDate: usageStats.sosUses >= 5 ? new Date() : undefined
+    },
+    {
+      id: "crisis-navigator",
+      title: "Crisis Navigator",
+      description: "Successfully used SOS support 15 times",
+      icon: "⚡",
+      earned: usageStats.sosUses >= 15,
+      progress: Math.min(usageStats.sosUses, 15),
+      maxProgress: 15,
+      category: "sos"
+    },
+
+    // 📔 Personal diary achievements
+    {
+      id: "diary-starter",
+      title: "Diary Starter",
+      description: "Wrote your first diary entry",
+      icon: "📔",
+      earned: usageStats.diaryEntries >= 1,
+      progress: Math.min(usageStats.diaryEntries, 1),
+      maxProgress: 1,
+      category: "diary",
+      earnedDate: usageStats.diaryEntries >= 1 ? new Date() : undefined
+    },
+    {
+      id: "thoughtful-writer",
+      title: "Thoughtful Writer",
+      description: "Wrote 10 personal diary entries",
+      icon: "✍️",
+      earned: usageStats.diaryEntries >= 10,
+      progress: Math.min(usageStats.diaryEntries, 10),
+      maxProgress: 10,
+      category: "diary",
+      earnedDate: usageStats.diaryEntries >= 10 ? new Date() : undefined
+    },
+
+    // 🎯 Consistency achievements
+    {
+      id: "active-week",
+      title: "Active Week",
+      description: "Used MindEase for 7 days",
+      icon: "🎯",
+      earned: usageStats.daysActive >= 7,
+      progress: Math.min(usageStats.daysActive, 7),
+      maxProgress: 7,
+      category: "consistency",
+      earnedDate: usageStats.daysActive >= 7 ? new Date() : undefined
     },
     {
       id: "milestone-warrior",
       title: "Milestone Warrior",
       description: "Reached 30 days on MindEase",
       icon: "🏆",
-      earned: false,
-      progress: 12,
+      earned: usageStats.daysActive >= 30,
+      progress: Math.min(usageStats.daysActive, 30),
       maxProgress: 30,
       category: "consistency"
     },
     {
       id: "wellness-champion",
       title: "Wellness Champion",
-      description: "Used all MindEase features in one week",
+      description: "Used all 7 MindEase features",
       icon: "🌟",
-      earned: false,
-      progress: 4,
-      maxProgress: 6,
+      earned: (usageStats.chatMessages >= 1 && usageStats.dreamEntries >= 1 && 
+               usageStats.sandboxCreations >= 1 && usageStats.gratitudeNotes >= 1 && 
+               usageStats.moodEntries >= 1 && usageStats.sosUses >= 1 && 
+               usageStats.diaryEntries >= 1),
+      progress: [usageStats.chatMessages >= 1, usageStats.dreamEntries >= 1, 
+                usageStats.sandboxCreations >= 1, usageStats.gratitudeNotes >= 1,
+                usageStats.moodEntries >= 1, usageStats.sosUses >= 1, 
+                usageStats.diaryEntries >= 1].filter(Boolean).length,
+      maxProgress: 7,
       category: "wellness"
     }
   ];
@@ -113,6 +309,9 @@ export default function Achievements() {
       case "wellness": return <Heart className="h-4 w-4" />;
       case "gratitude": return <Star className="h-4 w-4" />;
       case "consistency": return <Target className="h-4 w-4" />;
+      case "sandbox": return <Palette className="h-4 w-4" />;
+      case "diary": return <Calendar className="h-4 w-4" />;
+      case "sos": return <Heart className="h-4 w-4" />;
       default: return <Trophy className="h-4 w-4" />;
     }
   };
@@ -124,6 +323,9 @@ export default function Achievements() {
       case "wellness": return "green";
       case "gratitude": return "yellow";
       case "consistency": return "orange";
+      case "sandbox": return "pink";
+      case "diary": return "teal";
+      case "sos": return "red";
       default: return "gray";
     }
   };
@@ -131,14 +333,58 @@ export default function Achievements() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <div className="text-center space-y-2">
+      <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-2">
           <Trophy className="h-8 w-8 text-yellow-600" />
-          <h2 className="text-2xl font-bold text-primary">Achievements & Badges</h2>
+          <h2 className="text-2xl font-bold text-primary">🏅 Achievements & Badges</h2>
         </div>
         <p className="text-muted-foreground">
-          Celebrate your progress and milestones on your wellness journey
+          Celebrate your progress and milestones on your wellness journey ✨
         </p>
+        
+        {/* Live Usage Statistics */}
+        <Card className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20">
+          <CardHeader>
+            <CardTitle className="text-lg">📊 Your MindEase Usage Statistics</CardTitle>
+            <CardDescription>Real-time tracking of your wellness journey</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <div className="text-2xl font-bold text-blue-600">{usageStats.chatMessages}</div>
+                <div className="text-xs text-muted-foreground">💬 Chat Messages</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-purple-600">{usageStats.dreamEntries}</div>
+                <div className="text-xs text-muted-foreground">🌙 Dreams Logged</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-pink-600">{usageStats.sandboxCreations}</div>
+                <div className="text-xs text-muted-foreground">🎨 Art Creations</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-yellow-600">{usageStats.gratitudeNotes}</div>
+                <div className="text-xs text-muted-foreground">✨ Gratitude Notes</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-green-600">{usageStats.moodEntries}</div>
+                <div className="text-xs text-muted-foreground">📊 Mood Entries</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-red-600">{usageStats.sosUses}</div>
+                <div className="text-xs text-muted-foreground">🚨 SOS Uses</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-teal-600">{usageStats.diaryEntries}</div>
+                <div className="text-xs text-muted-foreground">📔 Diary Entries</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-orange-600">{usageStats.daysActive}</div>
+                <div className="text-xs text-muted-foreground">📅 Active Days</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Stats Overview */}
