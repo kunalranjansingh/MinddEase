@@ -73,15 +73,50 @@ export default function ChatBox() {
   };
 
   return (
-    <div className="flex flex-col h-[600px] max-w-2xl mx-auto">
-      <Card className="flex-1 flex flex-col">
+    <div className="flex flex-col h-[600px] max-w-2xl mx-auto relative">
+      {/* Animated Background */}
+      <div className="absolute inset-0 overflow-hidden rounded-lg">
+        <div className="chatbox-bg">
+          <div className="floating-hearts">
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={i}
+                className="floating-heart"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 4}s`,
+                  animationDuration: `${4 + Math.random() * 2}s`,
+                }}
+              >
+                💙
+              </div>
+            ))}
+          </div>
+          <div className="chat-bubbles">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="chat-bubble"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 6}s`,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+      
+      <Card className="flex-1 flex flex-col relative z-10 bg-background/90 backdrop-blur-sm border border-primary/20">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-primary">
             <Heart className="h-5 w-5" />
-            AI Support Chat
+            💬 AI Support Chat - Your Safe Space
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Share your thoughts and feelings in a safe, judgment-free space
+            🌸 Share your thoughts and feelings in a safe, judgment-free space. Our AI listens with empathy and responds with care.
           </p>
         </CardHeader>
         
@@ -145,6 +180,69 @@ export default function ChatBox() {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Animated Background Styles */}
+      <style>{`
+        .chatbox-bg {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, 
+            rgba(139, 92, 246, 0.1) 0%, 
+            rgba(59, 130, 246, 0.1) 50%, 
+            rgba(168, 85, 247, 0.1) 100%);
+          overflow: hidden;
+        }
+        
+        .floating-hearts {
+          position: absolute;
+          inset: 0;
+        }
+        
+        .floating-heart {
+          position: absolute;
+          font-size: 1.2rem;
+          animation: floatHeart infinite ease-in-out;
+          pointer-events: none;
+          opacity: 0.6;
+        }
+        
+        @keyframes floatHeart {
+          0%, 100% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 0.3;
+          }
+          50% {
+            transform: translateY(-20px) rotate(5deg);
+            opacity: 0.8;
+          }
+        }
+        
+        .chat-bubbles {
+          position: absolute;
+          inset: 0;
+        }
+        
+        .chat-bubble {
+          position: absolute;
+          width: 30px;
+          height: 20px;
+          background: rgba(139, 92, 246, 0.2);
+          border-radius: 15px 15px 15px 5px;
+          animation: bubbleFloat 8s infinite ease-in-out;
+          pointer-events: none;
+        }
+        
+        @keyframes bubbleFloat {
+          0%, 100% {
+            transform: translateY(0) scale(0.8);
+            opacity: 0.3;
+          }
+          50% {
+            transform: translateY(-30px) scale(1.1);
+            opacity: 0.6;
+          }
+        }
+      `}</style>
     </div>
   );
 }

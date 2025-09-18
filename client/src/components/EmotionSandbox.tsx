@@ -61,16 +61,51 @@ export default function EmotionSandbox() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 relative">
+      {/* Animated Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="sandbox-bg">
+          <div className="floating-shapes">
+            {[...Array(12)].map((_, i) => (
+              <div
+                key={i}
+                className="floating-shape"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 8}s`,
+                  animationDuration: `${6 + Math.random() * 4}s`,
+                }}
+              >
+                {['🎨', '✨', '🌈', '🎭', '🎪', '🌸'][Math.floor(Math.random() * 6)]}
+              </div>
+            ))}
+          </div>
+          <div className="art-patterns">
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={i}
+                className="art-pattern"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 10}s`,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+      
       {/* Input Section */}
-      <Card className="bg-gradient-to-r from-accent/5 to-primary/5">
+      <Card className="bg-gradient-to-r from-accent/10 to-primary/10 backdrop-blur-sm border border-accent/30 relative z-10">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-accent">
             <Palette className="h-5 w-5" />
-            Emotion Sandbox
+            🎨 Emotion Sandbox - Creative Expression Therapy
           </CardTitle>
           <CardDescription>
-            Transform your feelings into beautiful, calming creations
+            ✨ Transform your feelings into beautiful, calming creations. Turn any emotion into art, music, stories, and wellness tips.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -210,6 +245,85 @@ export default function EmotionSandbox() {
           </CardContent>
         </Card>
       )}
+      
+      {/* Animated Background Styles */}
+      <style>{`
+        .sandbox-bg {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at 20% 80%, 
+            rgba(168, 85, 247, 0.1) 0%, 
+            rgba(59, 130, 246, 0.1) 30%, 
+            rgba(16, 185, 129, 0.1) 60%, 
+            rgba(245, 158, 11, 0.1) 100%);
+          overflow: hidden;
+        }
+        
+        .floating-shapes {
+          position: absolute;
+          inset: 0;
+        }
+        
+        .floating-shape {
+          position: absolute;
+          font-size: 1.5rem;
+          animation: floatArt infinite ease-in-out;
+          pointer-events: none;
+          opacity: 0.7;
+        }
+        
+        @keyframes floatArt {
+          0%, 100% {
+            transform: translateY(0) rotate(0deg) scale(1);
+            opacity: 0.4;
+          }
+          33% {
+            transform: translateY(-15px) rotate(120deg) scale(1.1);
+            opacity: 0.8;
+          }
+          66% {
+            transform: translateY(-10px) rotate(240deg) scale(0.9);
+            opacity: 0.6;
+          }
+        }
+        
+        .art-patterns {
+          position: absolute;
+          inset: 0;
+        }
+        
+        .art-pattern {
+          position: absolute;
+          width: 40px;
+          height: 40px;
+          background: linear-gradient(45deg, 
+            rgba(168, 85, 247, 0.3) 0%, 
+            rgba(59, 130, 246, 0.3) 50%, 
+            rgba(16, 185, 129, 0.3) 100%);
+          border-radius: 50% 20% 50% 20%;
+          animation: patternDance 12s infinite ease-in-out;
+          pointer-events: none;
+        }
+        
+        @keyframes patternDance {
+          0%, 100% {
+            transform: scale(0.5) rotate(0deg);
+            opacity: 0.2;
+          }
+          25% {
+            transform: scale(1.2) rotate(90deg);
+            opacity: 0.5;
+          }
+          50% {
+            transform: scale(0.8) rotate(180deg);
+            opacity: 0.3;
+          }
+          75% {
+            transform: scale(1.1) rotate(270deg);
+            opacity: 0.6;
+          }
+        }
+      `}</style>
     </div>
   );
 }

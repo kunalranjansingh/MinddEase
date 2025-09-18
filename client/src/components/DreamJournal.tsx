@@ -53,16 +53,51 @@ export default function DreamJournal() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 relative">
+      {/* Animated Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="dream-bg">
+          <div className="floating-moons">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="floating-moon"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 6}s`,
+                  animationDuration: `${8 + Math.random() * 4}s`,
+                }}
+              >
+                {['🌙', '✨', '⭐', '🌟', '💫', '🔮'][i]}
+              </div>
+            ))}
+          </div>
+          <div className="dream-clouds">
+            {[...Array(10)].map((_, i) => (
+              <div
+                key={i}
+                className="dream-cloud"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 12}s`,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+      
       {/* Input Section */}
-      <Card className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/20 dark:to-blue-950/20">
+      <Card className="bg-gradient-to-r from-purple-100/80 to-blue-100/80 dark:from-purple-950/40 dark:to-blue-950/40 backdrop-blur-sm border border-purple-300 dark:border-purple-700 relative z-10">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
             <Moon className="h-5 w-5" />
-            Dream Journal (DreamCatcher)
+            🌙 Dream Journal (DreamCatcher) - Transform Your Sleep Stories
           </CardTitle>
           <CardDescription>
-            Share your dreams and watch them transform into positive stories and affirmations
+            ✨ Share your dreams and watch them transform into positive stories and affirmations. Even nightmares become beautiful tales of growth.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -199,6 +234,96 @@ export default function DreamJournal() {
           </CardContent>
         </Card>
       )}
+      
+      {/* Animated Background Styles */}
+      <style>{`
+        .dream-bg {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(ellipse at top, 
+            rgba(59, 130, 246, 0.1) 0%, 
+            rgba(139, 92, 246, 0.1) 40%, 
+            rgba(168, 85, 247, 0.1) 70%, 
+            rgba(30, 41, 59, 0.1) 100%);
+          overflow: hidden;
+        }
+        
+        .floating-moons {
+          position: absolute;
+          inset: 0;
+        }
+        
+        .floating-moon {
+          position: absolute;
+          font-size: 1.8rem;
+          animation: floatDream infinite ease-in-out;
+          pointer-events: none;
+          opacity: 0.8;
+        }
+        
+        @keyframes floatDream {
+          0%, 100% {
+            transform: translateY(0) rotate(0deg) scale(1);
+            opacity: 0.5;
+          }
+          50% {
+            transform: translateY(-25px) rotate(10deg) scale(1.2);
+            opacity: 0.9;
+          }
+        }
+        
+        .dream-clouds {
+          position: absolute;
+          inset: 0;
+        }
+        
+        .dream-cloud {
+          position: absolute;
+          width: 60px;
+          height: 30px;
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 50px;
+          position: relative;
+          animation: cloudDrift 15s infinite linear;
+          pointer-events: none;
+        }
+        
+        .dream-cloud::before {
+          content: '';
+          position: absolute;
+          top: -15px;
+          left: 10px;
+          width: 30px;
+          height: 30px;
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 50%;
+        }
+        
+        .dream-cloud::after {
+          content: '';
+          position: absolute;
+          top: -10px;
+          right: 15px;
+          width: 20px;
+          height: 20px;
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 50%;
+        }
+        
+        @keyframes cloudDrift {
+          0% {
+            transform: translateX(-100px) translateY(0);
+            opacity: 0;
+          }
+          10%, 90% {
+            opacity: 0.3;
+          }
+          100% {
+            transform: translateX(calc(100vw + 100px)) translateY(-50px);
+            opacity: 0;
+          }
+        }
+      `}</style>
     </div>
   );
 }
