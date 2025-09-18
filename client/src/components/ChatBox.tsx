@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, Heart, Loader2 } from "lucide-react";
+import { trackChatMessage } from "@/lib/usage";
 
 interface Message {
   id: string;
@@ -37,6 +38,9 @@ export default function ChatBox() {
     setMessages(prev => [...prev, userMessage]);
     setCurrentMessage("");
     setIsLoading(true);
+    
+    // Track usage for achievements
+    trackChatMessage();
 
     // Simulate AI response (in real app, this would call OpenAI API)
     setTimeout(() => {

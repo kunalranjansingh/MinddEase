@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Palette, Music, BookOpen, Sparkles, Loader2 } from "lucide-react";
+import { trackSandboxCreation } from "@/lib/usage";
 
 interface CreatedContent {
   type: "art" | "story" | "music" | "tip";
@@ -48,6 +49,9 @@ export default function EmotionSandbox() {
 
       setCreatedContent(mockContent);
       setIsGenerating(false);
+      
+      // Track usage for achievements
+      trackSandboxCreation();
     }, 2000);
 
     console.log("Generating content for emotion:", emotion);

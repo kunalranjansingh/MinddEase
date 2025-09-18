@@ -9,6 +9,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, Phone, Brain, Activity } from "lucide-react";
+import { trackSOSUse } from "@/lib/usage";
 import BreathingExercise from "./BreathingExercise";
 import GroundingGame from "./GroundingGame";
 import StretchRoutine from "./StretchRoutine";
@@ -19,7 +20,10 @@ export default function SOSButton() {
   return (
     <>
       <Button
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          setIsOpen(true);
+          trackSOSUse(); // Track usage for achievements
+        }}
         data-testid="button-sos"
         className="fixed bottom-6 right-6 h-16 w-16 rounded-full bg-destructive text-destructive-foreground shadow-lg hover:bg-destructive/90 z-50 pulse-animation"
         size="icon"

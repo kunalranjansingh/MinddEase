@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Moon, Sparkles, Heart, Loader2, Stars } from "lucide-react";
+import { trackDreamEntry } from "@/lib/usage";
 
 interface DreamEntry {
   id: string;
@@ -47,6 +48,9 @@ export default function DreamJournal() {
       setDreamEntries(prev => [newEntry, ...prev]);
       setCurrentDream("");
       setIsProcessing(false);
+      
+      // Track usage for achievements
+      trackDreamEntry();
     }, 2500);
 
     console.log("Processing dream:", currentDream);

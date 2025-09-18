@@ -4,7 +4,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
-import { BookOpen, Save, Heart, Sparkles, Lock } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { BookOpen, Save, Heart, Sparkles, Lock, CalendarDays } from "lucide-react";
+import { trackDiaryEntry } from "@/lib/usage";
 
 interface DiaryEntry {
   id: string;
@@ -17,6 +19,8 @@ interface DiaryEntry {
 export default function PersonalDiary() {
   const [currentTitle, setCurrentTitle] = useState("");
   const [currentContent, setCurrentContent] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [showCalendar, setShowCalendar] = useState(false);
   const [entries, setEntries] = useState<DiaryEntry[]>([
     // TODO: remove mock data
     {
@@ -62,20 +66,110 @@ export default function PersonalDiary() {
     setCurrentTitle("");
     setCurrentContent("");
     
+    // Track usage for achievements
+    trackDiaryEntry();
+    
     console.log("Saved diary entry:", newEntry.title);
   };
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <div className="text-center space-y-2">
+      <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-2">
           <Lock className="h-6 w-6 text-green-600" />
-          <h2 className="text-2xl font-bold text-primary">Your Private Diary</h2>
+          <h2 className="text-2xl font-bold text-primary">📔 Your Private Diary</h2>
         </div>
         <p className="text-muted-foreground">
-          A safe space for your thoughts, dreams, and feelings - completely private and secure
+          🔒 A safe space for your thoughts, dreams, and feelings - completely private and secure ✨
         </p>
+        
+        {/* Calendar with Smiling Faces */}
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="md:col-span-2">
+            {/* Calendar Toggle */}
+            <Button
+              onClick={() => setShowCalendar(!showCalendar)}
+              variant="outline"
+              size="sm"
+              className="mb-4 hover-elevate"
+              data-testid="button-toggle-calendar"
+            >
+              <CalendarDays className="h-4 w-4 mr-2" />
+              {showCalendar ? "Hide Calendar" : "Show Calendar"} 📅
+            </Button>
+            
+            {showCalendar && (
+              <Card className="border-2 border-yellow-200 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20">
+                <CardHeader>
+                  <CardTitle className="text-center text-yellow-700 dark:text-yellow-300">
+                    😊 Your Wellness Calendar 😊
+                  </CardTitle>
+                  <CardDescription className="text-center">
+                    Every day is a new opportunity for growth and happiness! 🌟
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex justify-center">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                    className="rounded-md border"
+                    components={{
+                      Day: ({ date, ...props }) => {
+                        const isToday = date?.toDateString() === new Date().toDateString();
+                        const isSelected = date?.toDateString() === selectedDate?.toDateString();
+                        const dayNumber = date?.getDate() || 0;
+                        
+                        // Add smiling faces based on the day
+                        const smileEmoji = dayNumber % 5 === 0 ? "😊" : 
+                                         dayNumber % 4 === 0 ? "😄" :
+                                         dayNumber % 3 === 0 ? "🙂" :
+                                         dayNumber % 2 === 0 ? "😌" : "😊";
+                        
+                        return (
+                          <button
+                            {...props}
+                            className={`
+                              relative h-9 w-9 p-0 font-normal aria-selected:opacity-100 
+                              ${isToday ? 'bg-yellow-300 text-yellow-900 rounded-full font-bold' : ''}
+                              ${isSelected ? 'bg-primary text-primary-foreground rounded-full' : ''}
+                              hover:bg-yellow-200 transition-all duration-200
+                            `}
+                            data-testid={`calendar-day-${dayNumber}`}
+                          >
+                            <div className="flex flex-col items-center">
+                              <span className="text-xs">{dayNumber}</span>
+                              <span className="text-[8px]">{smileEmoji}</span>
+                            </div>
+                          </button>
+                        );
+                      }
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            )}
+          </div>
+          
+          <div className="space-y-4">
+            <Card className="text-center bg-gradient-to-br from-pink-50 to-purple-50 dark:from-pink-950/20 dark:to-purple-950/20">
+              <CardContent className="p-4">
+                <div className="text-2xl mb-2">🌈</div>
+                <div className="text-sm font-semibold text-purple-700 dark:text-purple-300">Today's Mood</div>
+                <div className="text-xs text-muted-foreground">Click to add! 😊</div>
+              </CardContent>
+            </Card>
+            
+            <Card className="text-center bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20">
+              <CardContent className="p-4">
+                <div className="text-2xl mb-2">⭐</div>
+                <div className="text-sm font-semibold text-blue-700 dark:text-blue-300">Gratitude Today</div>
+                <div className="text-xs text-muted-foreground">What made you smile? 😄</div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
 
       {/* New Entry Form */}
@@ -83,23 +177,23 @@ export default function PersonalDiary() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-primary" />
-            Write a New Entry
+            ✍️ Write a New Entry
           </CardTitle>
           <CardDescription>
-            Express yourself freely - AI will create a positive affirmation from your writing
+            💖 Express yourself freely - AI will create a positive affirmation from your writing ✨
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <Input
             value={currentTitle}
             onChange={(e) => setCurrentTitle(e.target.value)}
-            placeholder="Give your entry a title..."
+            placeholder="📝 Give your entry a title..."
             data-testid="input-diary-title"
           />
           <Textarea
             value={currentContent}
             onChange={(e) => setCurrentContent(e.target.value)}
-            placeholder="What's on your mind? Write about your day, your dreams, your worries, or anything else you'd like to express..."
+            placeholder="🌸 What's on your mind? Write about your day, your dreams, your worries, or anything else you'd like to express... 💭"
             className="min-h-[150px] resize-none"
             data-testid="textarea-diary-content"
           />
@@ -110,7 +204,7 @@ export default function PersonalDiary() {
             className="w-full hover-elevate"
           >
             <Save className="h-4 w-4 mr-2" />
-            Save Entry
+            💾 Save Entry ✨
           </Button>
         </CardContent>
       </Card>
@@ -120,7 +214,7 @@ export default function PersonalDiary() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Heart className="h-5 w-5 text-destructive" />
-            Your Journal ({entries.length} entries)
+            💖 Your Journal ({entries.length} entries) 📚
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -128,9 +222,9 @@ export default function PersonalDiary() {
             <div className="space-y-4">
               {entries.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
-                  <BookOpen className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Your diary is waiting for your first entry!</p>
-                  <p className="text-sm mt-2">Start by writing about your day or anything on your mind.</p>
+                  <div className="text-6xl mb-4">📖</div>
+                  <p>📝 Your diary is waiting for your first entry! ✨</p>
+                  <p className="text-sm mt-2">🌟 Start by writing about your day or anything on your mind. 💭</p>
                 </div>
               ) : (
                 entries.map((entry) => (
@@ -156,7 +250,7 @@ export default function PersonalDiary() {
                             <Sparkles className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
                             <div>
                               <h4 className="font-medium text-primary text-sm mb-1">
-                                AI Affirmation
+                                ✨ AI Affirmation 💝
                               </h4>
                               <p className="text-sm text-muted-foreground italic">
                                 {entry.affirmation}
@@ -181,11 +275,11 @@ export default function PersonalDiary() {
             <Lock className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
             <div>
               <h3 className="font-semibold text-green-800 dark:text-green-200 mb-1">
-                Your Privacy is Protected
+                🔐 Your Privacy is Protected 🛡️
               </h3>
               <p className="text-sm text-green-700 dark:text-green-300">
-                Your diary entries are completely private and secure. Only you can see what you write here.
-                AI affirmations are generated to help support your emotional wellbeing.
+                🔒 Your diary entries are completely private and secure. Only you can see what you write here.
+                ✨ AI affirmations are generated to help support your emotional wellbeing. 💚
               </p>
             </div>
           </div>

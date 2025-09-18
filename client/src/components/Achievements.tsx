@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Trophy, Star, Heart, Moon, MessageCircle, Target, Palette, Calendar } from "lucide-react";
+import { getUsageStats, type UsageStats as AppUsageStats } from "@/lib/usage";
 
 interface Achievement {
   id: string;
@@ -16,39 +17,27 @@ interface Achievement {
   earnedDate?: Date;
 }
 
-interface UsageStats {
-  chatMessages: number;
-  dreamEntries: number;
-  sandboxCreations: number;
-  gratitudeNotes: number;
-  moodEntries: number;
-  sosUses: number;
-  diaryEntries: number;
-  daysActive: number;
-  weeklyGoalsSet: number;
-}
-
 export default function Achievements() {
-  // Real usage statistics (stored in localStorage for persistence)
-  const [usageStats, setUsageStats] = useState<UsageStats>(() => {
-    const saved = localStorage.getItem('mindease-usage-stats');
-    return saved ? JSON.parse(saved) : {
-      chatMessages: 15,      // 💬 Number of chat messages sent
-      dreamEntries: 8,       // 🌙 Number of dreams logged
-      sandboxCreations: 12,  // 🎨 Number of emotion sandbox creations
-      gratitudeNotes: 23,    // ✨ Number of gratitude jar notes
-      moodEntries: 18,       // 📊 Number of mood tracking entries
-      sosUses: 6,            // 🚨 Number of SOS button uses
-      diaryEntries: 14,      // 📔 Number of personal diary entries
-      daysActive: 12,        // 📅 Number of active days
-      weeklyGoalsSet: 3      // 🎯 Number of weekly goals set
-    };
-  });
+  // Real usage statistics from the centralized usage tracker
+  const [usageStats, setUsageStats] = useState<AppUsageStats>(getUsageStats);
 
-  // Save stats to localStorage whenever they change
+  // Refresh stats from localStorage when component mounts or becomes visible
   useEffect(() => {
-    localStorage.setItem('mindease-usage-stats', JSON.stringify(usageStats));
-  }, [usageStats]);
+    const refreshStats = () => {
+      setUsageStats(getUsageStats());
+    };
+    
+    // Refresh on focus to catch updates from other components
+    window.addEventListener('focus', refreshStats);
+    
+    // Refresh periodically to catch updates from localStorage
+    const interval = setInterval(refreshStats, 2000);
+    
+    return () => {
+      window.removeEventListener('focus', refreshStats);
+      clearInterval(interval);
+    };
+  }, []);
 
   // Generate achievements based on real usage data
   const achievements: Achievement[] = [
