@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertUserSchema } from "@shared/schema";
 import { z } from "zod";
+import bcrypt from "bcrypt";
 
 // Session type definition
 declare module "express-session" {
@@ -18,7 +19,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Sign up route
   app.post("/api/auth/signup", async (req, res) => {
     try {
-      const userData = insertUserSchema.parse(req.body);
+      // Extended validation to match frontend
+      const signupSchema = insertUserSchema.extend({
+        username: z.string().min(3, "Username must be at least 3 characters"),
+        password: z.string().min(6, "Password must be at least 6 characters"),
+      });
+      
+      const userData = signupSchema.parse(req.body);
       
       // Check if username already exists
       const existingUser = await storage.getUserByUsername(userData.username);
@@ -26,16 +33,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Username already exists" });
       }
       
-      // Create new user
-      const user = await storage.createUser(userData);
+      // Hash password
+      const hashedPassword = await bcrypt.hash(userData.password, 12);
       
-      // Set session
-      req.session.userId = user.id;
-      req.session.username = user.username;
+      // Create new user with hashed password
+      const user = await storage.createUser({
+        username: userData.username,
+        password: hashedPassword,
+      });
       
-      res.status(201).json({ 
-        id: user.id, 
-        username: user.username 
+      // Regenerate session ID for security
+      req.session.regenerate((err) => {
+        if (err) {
+          return res.status(500).json({ error: "Session error" });
+        }
+        
+        // Set session
+        req.session.userId = user.id;
+        req.session.username = user.username;
+        
+        res.status(201).json({ 
+          id: user.id, 
+          username: user.username 
+        });
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -56,17 +76,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Find user
       const user = await storage.getUserByUsername(username);
-      if (!user || user.password !== password) {
+      if (!user) {
         return res.status(401).json({ error: "Invalid credentials" });
       }
       
-      // Set session
-      req.session.userId = user.id;
-      req.session.username = user.username;
+      // Verify password using bcrypt
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
       
-      res.json({ 
-        id: user.id, 
-        username: user.username 
+      // Regenerate session ID for security
+      req.session.regenerate((err) => {
+        if (err) {
+          return res.status(500).json({ error: "Session error" });
+        }
+        
+        // Set session
+        req.session.userId = user.id;
+        req.session.username = user.username;
+        
+        res.json({ 
+          id: user.id, 
+          username: user.username 
+        });
       });
     } catch (error) {
       res.status(500).json({ error: "Internal server error" });

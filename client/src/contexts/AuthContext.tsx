@@ -39,6 +39,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loginMutation = useMutation({
     mutationFn: async (credentials: { username: string; password: string }) => {
       const res = await apiRequest("POST", "/api/auth/login", credentials);
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Login failed');
+      }
       return await res.json();
     },
     onSuccess: (userData) => {
@@ -50,6 +54,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signupMutation = useMutation({
     mutationFn: async (credentials: { username: string; password: string }) => {
       const res = await apiRequest("POST", "/api/auth/signup", credentials);
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Signup failed');
+      }
       return await res.json();
     },
     onSuccess: (userData) => {
@@ -61,6 +69,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logoutMutation = useMutation({
     mutationFn: async () => {
       const res = await apiRequest("POST", "/api/auth/logout");
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Logout failed');
+      }
       return await res.json();
     },
     onSuccess: () => {

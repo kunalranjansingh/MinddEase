@@ -80,6 +80,7 @@ function Router() {
     <Switch>
       <Route path="/login" component={LoginPage} />
       <Route path="/signup" component={SignupPage} />
+      <Route path="/mindease" component={isAuthenticated ? DashboardPage : WelcomePage} />
       {isAuthenticated ? (
         <>
           <Route path="/" component={() => <DashboardPage />} />
