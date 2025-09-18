@@ -9,12 +9,12 @@ It provides a **safe, creative, and calming space** where young people can expre
 
 ## ✨ Key Features  
 
-- 💬 **AI Chatbox** – Vent feelings and receive empathetic, supportive (non-medical) responses.  
-- 🎨 **Emotion Sandbox** – Transform emotions into calming **art, music, and stories**.  
-- 🌙 **Dream Journal (DreamCatcher)** – Reframe nightmares into **positive affirmations**.  
-- 📊 **Mood Tracker** – Gain insights into personal growth with mood logs & achievements.  
-- 🎮 **Wellness Games** – Relax with **breathing exercises, gratitude jar, and mindful mini-games**.  
-- 🚨 **Active SOS Tools** – Access instant calming support: stretches, grounding, positivity reminders.  
+- **AI Chatbox** – Vent feelings and receive empathetic, supportive (non-medical) responses.  
+-  **Emotion Sandbox** – Transform emotions into calming **art, music, and stories**.  
+-  **Dream Journal (DreamCatcher)** – Reframe nightmares into **positive affirmations**.  
+-  **Mood Tracker** – Gain insights into personal growth with mood logs & achievements.  
+-  **Wellness Games** – Relax with **breathing exercises, gratitude jar, and mindful mini-games**.  
+-  **Active SOS Tools** – Access instant calming support: stretches, grounding, positivity reminders.  
 
 ---
 
