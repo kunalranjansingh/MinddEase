@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { ThemeProvider, useTheme } from "./components/ThemeProvider";
+import { TranslationProvider } from "./contexts/TranslationContext";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 import SOSButton from "./components/SOSButton";
@@ -79,8 +80,10 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <ThemeProvider>
-          <MainApp />
-          <Toaster />
+          <TranslationProvider>
+            <MainApp />
+            <Toaster />
+          </TranslationProvider>
         </ThemeProvider>
       </TooltipProvider>
     </QueryClientProvider>
