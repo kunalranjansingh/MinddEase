@@ -46,7 +46,7 @@ It provides a **safe, creative, and calming space** where young people can expre
 
 ---
 
-## 📌 Note  
+## Note  
 
 MindEase is **not a replacement for professional help**.  
 It is designed to **support mental wellness** through creative expression, reflection, and mindfulness tools.  
