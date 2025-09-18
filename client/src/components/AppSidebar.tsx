@@ -1,4 +1,4 @@
-import { Home, LayoutDashboard, User, Heart } from "lucide-react";
+import { Home, LayoutDashboard, User } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import {
   Sidebar,
@@ -11,6 +11,7 @@ import {
   SidebarMenuItem,
   SidebarHeader,
 } from "@/components/ui/sidebar";
+import logoImage from "@assets/mindease-logo.jpeg";
 
 const menuItems = [
   {
@@ -37,7 +38,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader className="p-6">
         <Link to="/" className="flex items-center gap-2 text-sidebar-primary">
-          <Heart className="h-8 w-8" />
+          <img src={logoImage} alt="MindEase Logo" className="h-8 w-8 object-contain" />
           <span className="text-2xl font-bold">MindEase</span>
         </Link>
       </SidebarHeader>

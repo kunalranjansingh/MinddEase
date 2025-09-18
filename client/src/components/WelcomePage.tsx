@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, Heart } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 import { useTranslation } from "../contexts/TranslationContext";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { Link } from "wouter";
+import logoImage from "@assets/mindease-logo.jpeg";
 
 export default function WelcomePage() {
   const { theme, toggleTheme } = useTheme();
@@ -43,7 +44,7 @@ export default function WelcomePage() {
       {/* Header */}
       <header className="relative z-10 flex justify-between items-center p-6">
         <div className="flex items-center gap-2">
-          <Heart className="h-8 w-8 text-primary" />
+          <img src={logoImage} alt="MindEase Logo" className="h-8 w-8 object-contain" />
           <span className="text-2xl font-bold text-primary">{t.common.mindease}</span>
         </div>
         
@@ -95,7 +96,7 @@ export default function WelcomePage() {
                 data-testid="button-enter-mindease"
               >
                 {t.welcome.enterButton}
-                <Heart className="ml-2 h-5 w-5" />
+                <img src={logoImage} alt="MindEase Logo" className="ml-2 h-5 w-5 object-contain" />
               </Button>
             </Link>
           </div>
