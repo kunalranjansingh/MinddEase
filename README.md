@@ -1,5 +1,5 @@
 ## MINDEASE
-* _MindEase_ is a web-based platform designed to support youth mental wellness using Generative AI.
+**_MindEase_** is a web-based platform designed to support youth mental wellness using Generative AI.
 It provides a safe, creative, and calming space where young people can:
 - Vent in an AI Chatbox and receive empathetic responses (non-medical).
 - Use the Emotion Sandbox to transform feelings into calming art, music, and stories.
