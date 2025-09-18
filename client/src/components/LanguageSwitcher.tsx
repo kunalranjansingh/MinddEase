@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,9 +6,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
+import { useTranslation } from "../contexts/TranslationContext";
+import type { TranslationKey } from "@shared/translations";
 
 interface Language {
-  code: string;
+  code: TranslationKey;
   name: string;
   flag: string;
 }
@@ -29,7 +30,9 @@ export default function LanguageSwitcher({
   variant = "ghost", 
   size = "default" 
 }: LanguageSwitcherProps) {
-  const [currentLanguage, setCurrentLanguage] = useState(languages[0]);
+  const { currentLanguage, changeLanguage, t } = useTranslation();
+  
+  const currentLangData = languages.find(lang => lang.code === currentLanguage) || languages[0];
 
   return (
     <DropdownMenu>
@@ -41,8 +44,10 @@ export default function LanguageSwitcher({
           className="hover-elevate"
         >
           <Globe className="h-4 w-4 mr-2" />
-          <span className="hidden sm:inline">{currentLanguage.flag}</span>
-          <span className="hidden md:inline ml-1">{currentLanguage.name}</span>
+          <span className="hidden sm:inline">{currentLangData.flag}</span>
+          <span className="hidden md:inline ml-1">
+            {currentLanguage === "en" ? t.languages.english : t.languages.hindi}
+          </span>
           <ChevronDown className="h-3 w-3 ml-1" />
         </Button>
       </DropdownMenuTrigger>
@@ -50,21 +55,14 @@ export default function LanguageSwitcher({
         {languages.map((language) => (
           <DropdownMenuItem
             key={language.code}
-            onClick={() => {
-              setCurrentLanguage(language);
-              // Apply appropriate font family for Hindi
-              if (language.code === 'hi') {
-                document.documentElement.style.setProperty('--font-sans', "'Noto Sans Devanagari', Inter, sans-serif");
-              } else {
-                document.documentElement.style.setProperty('--font-sans', "Inter, 'Noto Sans Devanagari', sans-serif");
-              }
-              console.log(`Language switched to: ${language.name} - Font updated`);
-            }}
+            onClick={() => changeLanguage(language.code)}
             className="flex items-center gap-2 cursor-pointer"
             data-testid={`option-language-${language.code}`}
           >
             <span className="text-lg">{language.flag}</span>
-            <span>{language.name}</span>
+            <span>
+              {language.code === "en" ? t.languages.english : t.languages.hindi}
+            </span>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
