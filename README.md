@@ -3,11 +3,11 @@
 **MindEase** is a **web-based platform for youth mental wellness** powered by Generative AI.  
 It provides a **safe, creative, and calming space** where young people can express themselves, manage emotions, and build positive habits.  
 
-🚀 **Live Demo** → [MindEase on Render](https://minddease-80bs.onrender.com)  
+ **Live Demo** → [MindEase on Render](https://minddease-80bs.onrender.com)  
 
 ---
 
-## ✨ Key Features  
+## Key Features  
 
 - **AI Chatbox** – Vent feelings and receive empathetic, supportive (non-medical) responses.  
 -  **Emotion Sandbox** – Transform emotions into calming **art, music, and stories**.  
@@ -18,7 +18,7 @@ It provides a **safe, creative, and calming space** where young people can expre
 
 ---
 
-## 🛠️ Tech Stack  
+## Tech Stack  
 
 - **Frontend:** HTML, CSS, JavaScript (React)  
 - **Backend:** Node.js, Express.js  
@@ -28,7 +28,7 @@ It provides a **safe, creative, and calming space** where young people can expre
 
 ---
 
-## 🧭 Navigation Flow  
+## Navigation Flow  
 
 - **Home Page** → About MindEase  
 - **Dashboard** → Chatbox, Sandbox, Dream Journal  
@@ -37,7 +37,7 @@ It provides a **safe, creative, and calming space** where young people can expre
 
 ---
 
-## 👥 Team  
+## Team  
 
 - **Kunal Ranjan Singh**  
 - **Priya Singh**  
