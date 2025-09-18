@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, Heart, Loader2 } from "lucide-react";
+import { useTranslation } from "../contexts/TranslationContext";
 import { trackChatMessage } from "@/lib/usage";
 
 interface Message {
@@ -14,10 +15,12 @@ interface Message {
 }
 
 export default function ChatBox() {
+  const { t } = useTranslation();
+  
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Hello! I'm here to listen and support you. How are you feeling today?",
+      text: t.chatbox.initialMessage,
       sender: "ai",
       timestamp: new Date()
     }
@@ -44,14 +47,7 @@ export default function ChatBox() {
 
     // Simulate AI response (in real app, this would call OpenAI API)
     setTimeout(() => {
-      const aiResponses = [
-        "I hear you, and your feelings are completely valid. It takes courage to share what you're going through.",
-        "Thank you for trusting me with your thoughts. Remember, it's okay to not be okay sometimes.",
-        "You're not alone in feeling this way. Many people experience similar emotions, and that's perfectly normal.",
-        "I'm glad you felt comfortable sharing that with me. How would you like to explore these feelings?",
-        "Your awareness of your emotions shows great self-understanding. That's a wonderful strength you have.",
-        "It sounds like you're dealing with a lot right now. Let's take this one step at a time together."
-      ];
+      const aiResponses = t.chatbox.aiResponses;
 
       const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
 
@@ -93,7 +89,7 @@ export default function ChatBox() {
                   animationDuration: `${4 + Math.random() * 2}s`,
                 }}
               >
-                💙
+                <Heart className="h-4 w-4 text-blue-500" />
               </div>
             ))}
           </div>
@@ -117,10 +113,10 @@ export default function ChatBox() {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-primary">
             <Heart className="h-5 w-5" />
-            💬 AI Support Chat - Your Safe Space
+            {t.chatbox.title}
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            🌸 Share your thoughts and feelings in a safe, judgment-free space. Our AI listens with empathy and responds with care.
+            {t.chatbox.description}
           </p>
         </CardHeader>
         
@@ -155,7 +151,7 @@ export default function ChatBox() {
                 <div className="flex justify-start">
                   <div className="bg-muted text-muted-foreground p-3 rounded-lg flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span className="text-sm">AI is typing...</span>
+                    <span className="text-sm">{t.chatbox.typing}</span>
                   </div>
                 </div>
               )}
@@ -167,7 +163,7 @@ export default function ChatBox() {
               value={currentMessage}
               onChange={(e) => setCurrentMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Share what's on your mind..."
+              placeholder={t.chatbox.placeholder}
               disabled={isLoading}
               data-testid="input-chat-message"
               className="flex-1"

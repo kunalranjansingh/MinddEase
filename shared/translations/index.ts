@@ -75,6 +75,7 @@ export type TranslationObject = {
     description: string;
     placeholder: string;
     initialMessage: string;
+    typing: string;
     aiResponses: readonly string[];
   };
   breathing: {

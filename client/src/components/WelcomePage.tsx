@@ -2,22 +2,24 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, Heart } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
+import { useTranslation } from "../contexts/TranslationContext";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { Link } from "wouter";
 
 export default function WelcomePage() {
   const { theme, toggleTheme } = useTheme();
+  const { t } = useTranslation();
   const [greeting, setGreeting] = useState("");
 
   useEffect(() => {
     const getTimeBasedGreeting = () => {
       const hour = new Date().getHours();
-      if (hour < 12) return "Good Morning";
-      if (hour < 17) return "Good Afternoon";
-      return "Good Evening";
+      if (hour < 12) return t.welcome.greetings.morning;
+      if (hour < 17) return t.welcome.greetings.afternoon;
+      return t.welcome.greetings.evening;
     };
     setGreeting(getTimeBasedGreeting());
-  }, []);
+  }, [t]);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -42,7 +44,7 @@ export default function WelcomePage() {
       <header className="relative z-10 flex justify-between items-center p-6">
         <div className="flex items-center gap-2">
           <Heart className="h-8 w-8 text-primary" />
-          <span className="text-2xl font-bold text-primary">MindEase</span>
+          <span className="text-2xl font-bold text-primary">{t.common.mindease}</span>
         </div>
         
         <div className="flex items-center gap-3">
@@ -72,14 +74,14 @@ export default function WelcomePage() {
               {greeting}
             </h1>
             <div className="text-2xl md:text-3xl font-semibold text-foreground/80">
-              Welcome to Your Safe Space
+              {t.welcome.title}
             </div>
           </div>
 
           {/* Animated tagline */}
           <div className="relative">
             <div className="text-xl md:text-2xl font-medium text-muted-foreground slide-in-up">
-              AI for 24-Hour Youth Mental Wellness
+              {t.welcome.tagline}
             </div>
             <div className="absolute -inset-2 bg-gradient-to-r from-primary/20 to-accent/20 rounded-lg blur-lg opacity-50 -z-10" />
           </div>
@@ -92,18 +94,18 @@ export default function WelcomePage() {
                 className="text-lg px-8 py-4 rounded-xl hover-elevate bg-primary text-primary-foreground hover:bg-primary/90"
                 data-testid="button-enter-mindease"
               >
-                Enter MindEase
+                {t.welcome.enterButton}
                 <Heart className="ml-2 h-5 w-5" />
               </Button>
             </Link>
           </div>
 
-          {/* Floating elements */}
-          <div className="flex justify-center gap-8 pt-12 text-4xl">
-            <span className="animate-float-1">🌸</span>
-            <span className="animate-float-2">✨</span>
-            <span className="animate-float-3">🦋</span>
-            <span className="animate-float-1" style={{ animationDelay: "1s" }}>🌙</span>
+          {/* Floating elements - using simple shapes instead of emojis */}
+          <div className="flex justify-center gap-8 pt-12">
+            <div className="animate-float-1 w-4 h-4 bg-pink-300 dark:bg-pink-600 rounded-full opacity-60" />
+            <div className="animate-float-2 w-3 h-3 bg-yellow-300 dark:bg-yellow-500 rounded-sm rotate-45 opacity-70" />
+            <div className="animate-float-3 w-5 h-3 bg-purple-300 dark:bg-purple-500 rounded-full opacity-50" />
+            <div className="animate-float-1 w-4 h-4 bg-blue-300 dark:bg-blue-500 rounded-full opacity-60" style={{ animationDelay: "1s" }} />
           </div>
         </div>
       </main>

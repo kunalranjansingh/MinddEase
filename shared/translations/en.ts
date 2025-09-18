@@ -81,6 +81,7 @@ export const en = {
     description: "Share your thoughts and feelings in a safe, judgment-free space. Our AI listens with empathy and responds with care.",
     placeholder: "Share what's on your mind...",
     initialMessage: "Hello! I'm here to listen and support you. How are you feeling today?",
+    typing: "AI is typing...",
     aiResponses: [
       "I hear you, and your feelings are completely valid. It takes courage to share what you're going through.",
       "Thank you for trusting me with your thoughts. Remember, it's okay to not be okay sometimes.",
